@@ -95,7 +95,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer1(500);
+  setTimer1(1000);
   setTimer2(1000);
   while (1)
   {
@@ -275,7 +275,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 	if(timer_flag1==1){
 		update7SEG(index_led++);
-		setTimer1(500);
+		setTimer1(1000);
 		if (index_led==MAX_LED)
 		index_led=0;
 	}

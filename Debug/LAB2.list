@@ -116,8 +116,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer1(500);
- 8000166:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
+  setTimer1(1000);
+ 8000166:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  800016a:	f000 fa41 	bl	80005f0 <setTimer1>
   setTimer2(1000);
  800016e:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
@@ -590,8 +590,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
  8000444:	600a      	str	r2, [r1, #0]
  8000446:	4618      	mov	r0, r3
  8000448:	f7ff ff74 	bl	8000334 <update7SEG>
-		setTimer1(500);
- 800044c:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
+		setTimer1(1000);
+ 800044c:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  8000450:	f000 f8ce 	bl	80005f0 <setTimer1>
 		if (index_led==MAX_LED)
  8000454:	4b09      	ldr	r3, [pc, #36]	; (800047c <HAL_TIM_PeriodElapsedCallback+0x70>)
