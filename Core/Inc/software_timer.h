@@ -12,10 +12,12 @@
 #include "main.h"
 
 #define DIV 10;
-extern int timer_flag;
-extern int counter;
+extern int timer_flag1;
+extern int counter1;
+extern int timer_flag2;
+extern int counter2;
 void timerRun();
-void setTimer(int duration);
-
+void setTimer1(int duration);
+void setTimer2(int duration);
 
 #endif /* INC_SOFTWARE_TIMER_H_ */
