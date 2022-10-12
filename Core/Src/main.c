@@ -53,6 +53,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
 void update7SEG(int index);
+void updateClockBuffer(int hour,int minute);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,12 +96,25 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer1(1000);
-  setTimer2(1000);
+
+  int hour = 15 , minute = 8 , second = 50;
   while (1)
   {
     /* USER CODE END WHILE */
-
+	    second++;
+	    if (second >= 60){
+	        second = 0;
+	        minute++;
+	    }
+	    if(minute >= 60){
+	        minute = 0;
+	        hour++;
+	    }
+	    if(hour >=24){
+	        hour = 0;
+	    }
+	    updateClockBuffer(hour,minute);
+	    HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -228,9 +242,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1, 2, 3, 4};
+
+int led_buffer1[4] = {1, 2, 3, 4};
 void update7SEG(int index){
     switch (index){
         case 0:{
@@ -238,28 +254,28 @@ void update7SEG(int index){
         	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 			HAL_GPIO_TogglePin(EN3_GPIO_Port, EN3_Pin);
-			display7SEG(led_buffer[index]);
+			display7SEG(led_buffer1[index]);
 			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
         }
             break;
         case 1:{
         	//Display the second 7SEG with led_buffer[1]
 			HAL_GPIO_TogglePin(EN0_GPIO_Port, EN0_Pin);
-			display7SEG(led_buffer[index]);
+			display7SEG(led_buffer1[index]);
 			HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
         }
             break;
         case 2:{
         	//Display the third 7SEG with led_buffer[2]
 			HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
-			display7SEG(led_buffer[index]);
+			display7SEG(led_buffer1[index]);
 			HAL_GPIO_TogglePin(EN2_GPIO_Port, EN2_Pin);
 		}
         	break;
         case 3:{
         	//Display the forth 7SEG with led_buffer[3]
 			HAL_GPIO_TogglePin(EN2_GPIO_Port, EN2_Pin);
-			display7SEG(led_buffer[index]);
+			display7SEG(led_buffer1[index]);
 			HAL_GPIO_TogglePin(EN3_GPIO_Port, EN3_Pin);
 		 }
             break;
@@ -281,6 +297,66 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 	timerRun();
 }
+int index1=0;
+void updateClockBuffer(int hour, int minute){
+    
+        int led_buffer[2] = {hour,minute};    //Display the first 7SEG with led_buffer[0]
+        switch (index1){
+                case 0:{
+                    //Display the first 7SEG with led_buffer[0]
+                	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
+        			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
+        			HAL_GPIO_TogglePin(EN3_GPIO_Port, EN3_Pin);
+        			if(led_buffer[0]<=9) display7SEG(0);
+        			else display7SEG(led_buffer[0]/10);
+        			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
+        			index1=1;
+                }
+                    break;
+                case 1:{
+                	//Display the second 7SEG with led_buffer[1]
+        			HAL_GPIO_TogglePin(EN0_GPIO_Port, EN0_Pin);
+        			display7SEG(led_buffer[0]%10);
+        			HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
+        			index1=2;
+                }
+                    break;
+                case 2:{
+                	//Display the third 7SEG with led_buffer[2]
+        			HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
+        			if(led_buffer[1]<=9) display7SEG(0);
+        			else display7SEG(led_buffer[1]/10);
+        			HAL_GPIO_TogglePin(EN2_GPIO_Port, EN2_Pin);
+        			index1=3;
+        		}
+                	break;
+                case 3:{
+                	//Display the forth 7SEG with led_buffer[3]
+        			HAL_GPIO_TogglePin(EN2_GPIO_Port, EN2_Pin);
+        			display7SEG(led_buffer[1]%10);
+        			HAL_GPIO_TogglePin(EN3_GPIO_Port, EN3_Pin);
+        			index1=0;
+        		 }
+                    break;
+                default:
+                    break;
+            }
+		 
+}
+/*void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if (timer_flag2==1){
+		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+		setTimer2(1000);
+	}
+	if(timer_flag1==1){
+		update7SEG(index_led++);
+		setTimer1(1000);
+		if (index_led==MAX_LED)
+		index_led=0;
+	}
+
+}*/
 void display7SEG(int num)
 {
 	HAL_GPIO_WritePin(SEG0_GPIO_Port, SEG0_Pin, RESET);
