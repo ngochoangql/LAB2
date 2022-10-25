@@ -12,5 +12,6 @@
 extern int hour;
 extern int minute;
 extern int second;
+extern int index1;
 
 #endif /* INC_GLOBAL_H_ */
